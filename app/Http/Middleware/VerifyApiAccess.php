@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VerifyApiAccess
 {
@@ -25,6 +26,7 @@ class VerifyApiAccess
 //                "AccessStatus" => false
 //            ],403);
 //        }
+
         // for the cors errors
         $request->headers->set('Access-Control-Allow-Origin' , '*');
         $request->headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');

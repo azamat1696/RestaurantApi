@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RestCustomersRequest;
 use App\Mail\TestMail;
 use App\Models\RestCustomers;
+use App\Models\SubscribedPlaces;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -51,7 +52,23 @@ class AuthAdminController extends Controller
         ]);
 
         $user = RestCustomers::where('email', $validator->validated()['email'])->firstOrFail();
-
+        $rest = SubscribedPlaces::where('id',$user->restaurant_id)->first();
+        if ($rest->Status == 0 && $rest->IsArchived == 1 )
+        {
+            return response()->json([
+                'status' => false,
+                'status_code' => 401,
+                'message' => 'User Not Active',
+            ],401);
+        }
+        if ($rest->IsArchived == 1 )
+        {
+            return response()->json([
+                'status' => false,
+                'status_code' => 401,
+                'message' => 'Place Not Active',
+            ],401);
+        }
         if (Hash::check($validator->validated()['password'],$user->password))
         {
             $user->tokens()->delete();

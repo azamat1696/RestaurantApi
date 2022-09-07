@@ -1,23 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdminApi;
+namespace App\Http\Controllers\AdminApi;
 
 use App\Events\SendEvents;
 use App\Helpers\FileUploader;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventsRequest;
 use App\Mail\SendEventToCustomers;
-use App\Mail\TestMail;
 use App\Models\Customers;
 use App\Models\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use PHPUnit\Exception;
 
 
-class EventsController extends Controller
+class RestEventsController extends Controller
 {
     protected $filePath ;
     public function __construct()
@@ -30,9 +28,14 @@ class EventsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events = DB::table('event_rest_users')->get();
+
+        $header = $request->bearerToken();
+        [$id, $token] = explode('|',$header,2);
+        $userId = DB::table('personal_access_tokens')->find($id);
+//$userId->tokenable_id
+        $events = DB::table('event_rest_users')->where('rest_user_id',$userId->tokenable_id)->get();
         return response()->json($events);
     }
     /**
@@ -52,7 +55,6 @@ class EventsController extends Controller
          $data = Events::create(['Banner' => $fileName] + $request->validated());
         try {
             SendEvents::dispatch($data);
-
         } catch (\Exception $exception)
         {
             echo $exception;
@@ -173,8 +175,5 @@ class EventsController extends Controller
             echo $exception->getMessage();
         }
         return response()->json(DB::table('eventcustomers')->where('customer_id','=',   $cutomerCheck->id)->get());
-    }
-    public function getAllEventCustomers(){
-        return response()->json(DB::table('eventcustomers')->get());
     }
 }

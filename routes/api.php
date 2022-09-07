@@ -59,17 +59,14 @@ Route::group(['prefix' => 'adapi', 'middleware' => ['verify-api']],function (){
   Route::post('forgot-password',[AuthAdminController::class,'forgotPassword']);
 });
 Route::group(['prefix' => 'adapi', 'middleware' => ['verify-api','auth:sanctum']],function (){
-   Route::post('admin/logout',[AuthAdminController::class,'logout']);
-   Route::resource('customers',\App\Http\Controllers\SuperAdminApi\CustomersController::class);
-   Route::resource('events',\App\Http\Controllers\SuperAdminApi\EventsController::class);
-    Route::post('events/customer-registration',[\App\Http\Controllers\SuperAdminApi\EventsController::class,'eventCustomerRegister']);
-    Route::get('customer-registrations',[\App\Http\Controllers\SuperAdminApi\EventsController::class,'eventCustomers']);
+    Route::post('admin/logout',[AuthAdminController::class,'logout']);
+    Route::resource('customers',\App\Http\Controllers\SuperAdminApi\CustomersController::class);
+    Route::resource('events',\App\Http\Controllers\AdminApi\RestEventsController::class);
+    Route::post('events/customer-registration',[\App\Http\Controllers\AdminApi\RestEventsController::class,'eventCustomerRegister']);
+    Route::get('customer-registrations',[\App\Http\Controllers\AdminApi\RestEventsController::class,'eventCustomers']);
     Route::resource('restaurants',\App\Http\Controllers\SuperAdminApi\SubscribedPlacesController::class);
     Route::resource('restaurant-users',\App\Http\Controllers\SuperAdminApi\RestCustomersController::class);
-
-
 });
-
 
 
 /****************Front Api ************************/
@@ -87,4 +84,5 @@ Route::group(['prefix' => 'fapi'],function (){
 });
 Route::group(['prefix' => 'fapi','middleware' => ['auth:sanctum']],function (){
     Route::post('customer/logout',[AuthFrontController::class,'logout']);
+    Route::get('event-customers',[\App\Http\Controllers\SuperAdminApi\EventsController::class,'getAllEventCustomers']);
 });
