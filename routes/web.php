@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\ReservationsEvent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,9 +13,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return response()->json([
-        'error' => "Unauthorized"
-    ]);
+Route::get('/broadcast',function (){
+    broadcast(new ReservationsEvent());
 });
+//Route::get('/', function () {
+//    return response()->json([
+//        'error' => "Unauthorized"
+//    ]);
+//});

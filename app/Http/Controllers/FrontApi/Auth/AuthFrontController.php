@@ -7,7 +7,6 @@ use App\Mail\TestMail;
 use App\Models\Customers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -27,9 +26,9 @@ class AuthFrontController extends Controller
         if(!$validator->fails()){
             $user = Customers::create([
                 "name" => $request->name,
-                "surname" => $request->email,
+                "surname" => $request->surname,
                 "email" => $request->email,
-                "phone" => $request->email,
+                "phone" => $request->phone,
                 "password" => Hash::make($request->password),
             ]);
 

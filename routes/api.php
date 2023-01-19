@@ -6,20 +6,6 @@ use App\Http\Controllers\SuperAdminApi\Auth\AuthController;
 use App\Http\Controllers\SuperAdminApi\Auth\NewPasswordController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-//
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
 
 
 /****************Super Admin Api ************************/
@@ -43,6 +29,7 @@ Route::group(['middleware' => ['verify-api','auth:sanctum']],  function (){
     Route::post('events/customer-registration',[\App\Http\Controllers\SuperAdminApi\EventsController::class,'eventCustomerRegister']);
     Route::get('customer-registrations',[\App\Http\Controllers\SuperAdminApi\EventsController::class,'eventCustomers']);
     Route::resource('sliders',\App\Http\Controllers\SuperAdminApi\Settings\SlidersController::class);
+    Route::get('reservations',[\App\Http\Controllers\SuperAdminApi\ReservationsController::class,'getReservations']);
 
 });
 
@@ -66,6 +53,7 @@ Route::group(['prefix' => 'adapi', 'middleware' => ['verify-api','auth:sanctum']
     Route::get('customer-registrations',[\App\Http\Controllers\AdminApi\RestEventsController::class,'eventCustomers']);
     Route::resource('restaurants',\App\Http\Controllers\SuperAdminApi\SubscribedPlacesController::class);
     Route::resource('restaurant-users',\App\Http\Controllers\SuperAdminApi\RestCustomersController::class);
+    Route::resource('reservations',\App\Http\Controllers\SuperAdminApi\ReservationsController::class);
 });
 
 

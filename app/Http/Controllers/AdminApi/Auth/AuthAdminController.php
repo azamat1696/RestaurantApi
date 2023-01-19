@@ -51,9 +51,24 @@ class AuthAdminController extends Controller
             "password" => "required|string",
         ]);
 
-        $user = RestCustomers::where('email', $validator->validated()['email'])->firstOrFail();
+        $user = RestCustomers::where('email', $validator->validated()['email'])->first();
+
         $rest = SubscribedPlaces::where('id',$user->restaurant_id)->first();
-        if ($rest->Status == 0 && $rest->IsArchived == 1 )
+        if(!$user){
+            return response()->json([
+                'status' => false,
+                'status_code' => 401,
+                'message' => 'User Not Found',
+            ],401);
+        }
+        if(!$rest){
+            return response()->json([
+                'status' => false,
+                'status_code' => 401,
+                'message' => 'Place Not Found',
+            ],401);
+        }
+        if ($rest->Status === 0 )
         {
             return response()->json([
                 'status' => false,
@@ -61,7 +76,7 @@ class AuthAdminController extends Controller
                 'message' => 'User Not Active',
             ],401);
         }
-        if ($rest->IsArchived == 1 )
+        if ($rest->IsArchived === 1 )
         {
             return response()->json([
                 'status' => false,

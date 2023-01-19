@@ -17,6 +17,7 @@ class EventCustomer extends Migration
             $table->id();
             $table->bigInteger('event_id');
             $table->bigInteger('customer_id');
+            $table->bigInteger('guestCustomer')->default(null);
             $table->foreign('event_id')->references('id')->on('events')->onDelete('set null')->onUpdate('cascade');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null')->onUpdate('cascade');
         });

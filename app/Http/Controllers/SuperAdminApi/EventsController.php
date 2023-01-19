@@ -137,13 +137,15 @@ class EventsController extends Controller
             "email" => "required|email",
             "phone" => "required",
             "event_id" => "required",
+            "guestCustomer" => "required",
         ]);
      $cutomerCheck = Customers::where('email','=',$validator->validated()['email'])->count();
      if($cutomerCheck == 0){
          $newCustomer = Customers::create($validator->validated());
-         $newRegistr = DB::table('event_customer_register')->insert([
+         DB::table('event_customer_register')->insert([
              'customer_id' => $newCustomer->id,
-             'event_id' => $validator->validated()['event_id']
+             'event_id' => $validator->validated()['event_id'],
+             'guestCustomer' => $validator->validated()['guestCustomer']
              ]);
          try
          {
@@ -161,7 +163,8 @@ class EventsController extends Controller
              ->where('customer_id',$cutomerCheck->id)->delete();
         $customers = [
             'customer_id' => $cutomerCheck->id,
-            'event_id' => $validator->validated()['event_id']
+            'event_id' => $validator->validated()['event_id'],
+            'guestCustomer' => $validator->validated()['guestCustomer']
         ];
          DB::table('event_customer_register')->insert($customers);
         try
